@@ -1,4 +1,2 @@
-{"ip": "10.0.0.3", "event": "suspicious_traffic", "count": 8, "threshold": 8, "window_sec": 3, "action": "blocked", "timestamp": "2026-04-09 23:46:59"}
 {"ip": "10.0.0.3", "event": "unblocked", "action": "removed", "timestamp": "2026-04-09 23:47:44"}
-{"ip": "10.0.0.3", "event": "suspicious_traffic", "count": 8, "threshold": 8, "window_sec": 3, "action": "blocked", "timestamp": "2026-04-09 23:55:17"}
 {"ip": "10.0.0.3", "event": "unblocked", "action": "removed", "timestamp": "2026-04-09 23:56:04"}

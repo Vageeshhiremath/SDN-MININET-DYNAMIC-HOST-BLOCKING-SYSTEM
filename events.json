@@ -1,0 +1,2 @@
+{"ip": "10.0.0.3", "event": "suspicious_traffic", "count": 5, "threshold": 5, "window_sec": 5, "action": "blocked", "verified": true, "timestamp": "2026-04-03 14:04:43"}
+{"ip": "10.0.0.3", "event": "suspicious_traffic", "count": 5, "threshold": 5, "window_sec": 5, "action": "blocked", "verified": true, "timestamp": "2026-04-03 14:23:59"}

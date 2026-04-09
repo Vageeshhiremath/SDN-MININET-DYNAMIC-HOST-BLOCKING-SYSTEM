@@ -1,0 +1,88 @@
+1) Install Mininet and Open vSwitch
+sudo apt update
+sudo apt install mininet openvswitch-switch tcpdump git -y
+2) Clone POX
+cd ~
+git clone https://github.com/noxrepo/pox.git
+3) Copy controller into POX ext folder
+
+Assuming this project is in:
+
+~/dynamic-host-blocking
+
+Copy the controller into POX:
+
+cp ~/dynamic-host-blocking/controller/dynamic_block.py ~/pox/ext/
+
+If you are keeping POX inside the project folder, update the path accordingly.
+
+###How to Run
+Step 1 — Start POX Controller
+cd ~/pox
+./pox.py log.level --DEBUG openflow.of_01 --port=6633 dynamic_block
+
+Expected output:
+
+[*] Dynamic Host Blocking POX module loaded
+[*] Dynamic Host Blocking Controller connected
+Step 2 — Start Mininet Topology
+
+Open another terminal:
+
+cd ~/dynamic-host-blocking
+sudo mn --custom topology.py --topo securitytopo \
+--switch ovs,protocols=OpenFlow10 \
+--controller remote,ip=127.0.0.1,port=6633
+
+Expected Mininet hosts:
+
+h1 = 10.0.0.1
+h2 = 10.0.0.2
+h3 = 10.0.0.3
+Functional Demonstration
+
+###Test 1 — Normal Traffic
+
+Inside Mininet:
+
+h1 ping -c 3 10.0.0.2
+Expected result
+Ping should succeed
+No host should be blocked
+
+###Test 2 — Suspicious Traffic
+
+Inside Mininet:
+
+h3 ping -i 0.2 -c 20 10.0.0.2
+Expected result
+
+POX controller should log something like:
+
+[DEBUG] Packet seen: 10.0.0.3 -> 10.0.0.2
+[DEBUG] 10.0.0.3 packet count in 5s window = 1
+...
+[DEBUG] 10.0.0.3 packet count in 5s window = 5
+[!] Suspicious activity detected from 10.0.0.3
+[+] OpenFlow BLOCK rule installed for 10.0.0.3
+
+This shows dynamic blocking is working.
+
+###Verify OpenFlow Flow Rules
+
+Run this in a separate terminal:
+
+sudo ovs-ofctl -O OpenFlow10 dump-flows s1
+Expected output (example)
+priority=100,ip,nw_src=10.0.0.3 actions=drop
+
+###Useful Verification Commands
+	#Show current OpenFlow rules
+		sudo ovs-ofctl -O OpenFlow10 dump-flows s1
+
+	#Start tcpdump on switch interface
+		sudo tcpdump -i s1-eth3 -n
+	#Test normal traffic
+		h1 ping -c 3 10.0.0.2
+	#Test suspicious traffic
+		h3 ping -i 0.2 -c 20 10.0.0.2

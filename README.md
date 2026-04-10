@@ -1,108 +1,179 @@
-# Dynamic Host Blocking System
+# SDN-Based Dynamic Host Blocking 
 
 ## Overview
+This project implements a **Dynamic Host Blocking System** using **Software Defined Networking (SDN)** with Mininet, POX, and OpenFlow.
+The controller observes host traffic behavior in real time and dynamically blocks suspicious sources by installing OpenFlow drop rules.
 
-This project implements a Dynamic Host Blocking System using Software
-Defined Networking (SDN) with Mininet, POX Controller, and OpenFlow.
+---
 
-The system monitors network traffic in real time, detects suspicious
-behavior, and automatically blocks malicious hosts.
+## Project Goal
+To dynamically block hosts based on traffic behavior using a programmable SDN controller.
 
-------------------------------------------------------------------------
+---
 
+## Expected Outcomes
+- Detect suspicious activity
+- Install blocking rules
+- Verify blocking behavior
+- Log security events
 
-## Project Structure
+---
 
-SDN_DYNAMIC_HOST/ - dynamic_block.py - topology.py - events.json -
-README.md
+## Problem Context
+In conventional networks, responding to malicious or high-rate traffic is often manual and delayed. SDN provides centralized visibility and policy control, making dynamic and automated enforcement possible.
 
-------------------------------------------------------------------------
+This project addresses:
+> **Automatic detection of high-rate suspicious host traffic and dynamic host blocking using OpenFlow.**
 
-## Controller Execution
+---
 
-Command: ./pox.py log.level --DEBUG openflow.of_01 dynamic_block
+## Execution Workflow
 
-![Controller Output]
-<img width="594" height="290" alt="controller_pox" src="https://github.com/user-attachments/assets/27ffb274-0eff-48ac-b235-4042dca91e38" />
+### 1) Launch POX
+```bash
+cd ~/pox
+./pox.py log.level --DEBUG openflow.of_01 --port=6633 dynamic_block
+```
 
+POX console output:
 
-------------------------------------------------------------------------
+![POX Output](images/controller_pox.png)
 
-## Mininet Execution
+### 2) Launch Mininet Topology
+```bash
+sudo mn --custom topology.py --topo securitytopo --switch ovs,protocols=OpenFlow10 --controller remote,ip=127.0.0.1,port=6633
+```
 
-Command: sudo mn --custom topology.py --topo securitytopo --switch
-ovs,protocols=OpenFlow10 --controller remote,ip=127.0.0.1,port=6633
+Mininet topology view:
 
-![Mininet Topology]
-<img width="709" height="276" alt="topolgy" src="https://github.com/user-attachments/assets/0d11176d-2318-4722-a629-50ae7b2b85f1" />
+![Mininet Topology](images/topolgy.png)
 
+### 3) Baseline Traffic (Before Block)
+```bash
+mininet> h1 ping -c 3 10.0.0.2
+```
 
-------------------------------------------------------------------------
+Before blocking result:
 
-## Normal Traffic (Before Blocking)
+![Before Blocking](images/beforeblocking.png)
 
-Command: mininet\> h1 ping -c 3 10.0.0.2
+### 4) Suspicious Traffic Simulation
+```bash
+mininet> h3 ping -i 0.2 -c 20 10.0.0.2
+```
 
-![Before Blocking]
-<img width="529" height="147" alt="beforeblocking" src="https://github.com/user-attachments/assets/2cd168c9-5fbb-4391-b4ee-edbcbfaad446" />
+Packet capture output:
 
+![Traffic Capture](images/tcptraffic.png)
 
-------------------------------------------------------------------------
+Controller detection output:
 
-## Attack Simulation
+![Detection Output](images/blockdetection.png)
 
-Command: mininet\> h3 ping -i 0.2 -c 20 10.0.0.2
+Post-block behavior result:
 
-![Traffic Capture]
-<img width="647" height="351" alt="tcptraffic" src="https://github.com/user-attachments/assets/a411d320-fe0e-40ec-bc77-574b10de8c66" />
+![Post Block Result](images/blockmininet.png)
 
+### 5) Confirm Installed Flow Rules
+```bash
+sudo ovs-ofctl -O OpenFlow10 dump-flows s1
+```
 
-------------------------------------------------------------------------
+Flow table output:
 
-## Detection Logic Execution
+![Flow Table Output](images/flowtable.png)
 
-![Detection Logs]
-<img width="564" height="195" alt="blockdetection" src="https://github.com/user-attachments/assets/a5b6dbbe-27c6-46a2-8761-376185c2590d" />
+---
 
+## Detection Parameters
+Configured controller values:
 
-------------------------------------------------------------------------
+- `THRESHOLD = 8`
+- `WINDOW = 3` seconds
+- `BLOCK_TIME = 45` seconds
+- `WHITELIST = {"10.0.0.2"}`
 
-## After Blocking
+When a non-whitelisted source crosses the packet threshold inside the time window, the controller adds a drop flow for that IP. The rule is removed automatically after block timeout.
 
-![After Blocking]
-<img width="504" height="161" alt="blockmininet" src="https://github.com/user-attachments/assets/a7f8ece5-2ecc-46d1-a79a-70d96abf8bc1" />
+---
 
-------------------------------------------------------------------------
+## Topology Details
+- `h1`: normal client (`10.0.0.1`)
+- `h2`: server and whitelisted node (`10.0.0.2`)
+- `h3`: attacker simulation host (`10.0.0.3`)
+- `h4`: extra host (`10.0.0.4`)
+- `s1`: OpenFlow switch
 
-## Flow Table Verification
+Topology view:
 
-Command: sudo ovs-ofctl -O OpenFlow10 dump-flows s1
+![Topology](images/topolgy.png)
 
-![Flow Table]
-<img width="752" height="175" alt="flowtable" src="https://github.com/user-attachments/assets/a3fa2407-a169-4f17-90bb-c727b9f8f515" />
+---
 
+## Key Features
+- Custom **4-host, 1-switch** Mininet topology
+- Custom event-driven logic in **POX**
+- OpenFlow **PacketIn** handling
+- Per-source traffic behavior tracking
+- Threshold-based suspicious traffic detection
+- Runtime installation of **drop** rules
+- Temporary block with automatic unblock after timeout
+- Verification through:
+  - `ping`
+  - `ovs-ofctl`
+  - `tcpdump` / Wireshark
 
-------------------------------------------------------------------------
+---
 
-## Detection Logic
+## Tech Stack
+- **Ubuntu / WSL**
+- **Python 3**
+- **Mininet**
+- **POX Controller**
+- **Open vSwitch**
+- **OpenFlow 1.0**
+- **tcpdump / Wireshark**
+- **Git & GitHub**
 
-Threshold: 8 packets\
-Window: 3 seconds\
-Block Time: 45 seconds
+---
 
-If traffic exceeds threshold, host is blocked automatically.
+## Event Logging
+Controller events are appended in `events.json`.
 
-------------------------------------------------------------------------
+Sample entries:
 
-## Event Logs
-
-Sample logs:
-
+```json
+{"ip": "10.0.0.3", "event": "suspicious_traffic", "count": 8, "threshold": 8, "window_sec": 3, "action": "blocked", "verified": true}
 {"ip": "10.0.0.3", "event": "unblocked", "action": "removed"}
+```
 
-------------------------------------------------------------------------
+---
 
-## Conclusion
+## Repository Layout
 
-This project demonstrates dynamic and automated threat mitigation using
-SDN.
+```text
+SDN-MININET-DYNAMIC-HOST-BLOCKING-SYSTEM-main/
+|-- images/
+|   |-- beforeblocking.png
+|   |-- blockdetection.png
+|   |-- blockmininet.png
+|   |-- controller_pox.png
+|   |-- flowtable.png
+|   |-- tcptraffic.png
+|   `-- topolgy.png
+|-- .gitignore
+|-- README.md
+|-- dynamic_block.py
+|-- events.json
+`-- topology.py
+```
+
+---
+
+## Final Note
+This implementation highlights how SDN can provide programmable and responsive security control in a practical network scenario.
+By integrating Mininet for emulation, POX for centralized logic, and OpenFlow for rule enforcement, the system can react to suspicious traffic patterns in real time.
+The behavior-based detection approach helps identify abnormal host activity and apply timely mitigation.
+Overall, the project demonstrates that dynamic host blocking can be achieved effectively through software-defined control.
+
+---

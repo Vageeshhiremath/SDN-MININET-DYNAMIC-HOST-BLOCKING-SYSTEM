@@ -1,5 +1,6 @@
 from collections import defaultdict
 import json
+import os
 import subprocess
 import time
 
@@ -11,7 +12,7 @@ log = core.getLogger()
 THRESHOLD = 8
 WINDOW = 3
 BLOCK_TIME = 45
-LOG_FILE = "/home/vageesh/Downloads/SDN_DYNAMIC_HOST/events.json"
+LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "events.json")
 WHITELIST = {"10.0.0.2"}
 
 packet_log = defaultdict(list)

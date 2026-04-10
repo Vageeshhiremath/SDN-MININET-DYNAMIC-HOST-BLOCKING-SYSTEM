@@ -10,13 +10,6 @@ behavior, and automatically blocks malicious hosts.
 
 ------------------------------------------------------------------------
 
-## Network Topology
-
-![Topology]
-<img width="709" height="276" alt="topolgy" src="https://github.com/user-attachments/assets/c720c03c-60f1-44bc-937a-c359613e5034" />
-
-
-------------------------------------------------------------------------
 
 ## Project Structure
 

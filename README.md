@@ -34,7 +34,7 @@ Command: sudo mn --custom topology.py --topo securitytopo --switch
 ovs,protocols=OpenFlow10 --controller remote,ip=127.0.0.1,port=6633
 
 ![Mininet Topology]
-<img width="504" height="161" alt="blockmininet" src="https://github.com/user-attachments/assets/9ade14c8-9d05-40da-8476-04c2876ef9d4" />
+<img width="709" height="276" alt="topolgy" src="https://github.com/user-attachments/assets/0d11176d-2318-4722-a629-50ae7b2b85f1" />
 
 
 ------------------------------------------------------------------------

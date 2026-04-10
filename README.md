@@ -126,13 +126,13 @@ Topology view:
 ---
 
 ## Tech Stack
-- **Ubuntu / WSL**
-- **Python 3**
+- **Ubuntu **
+- **Python 3.9**
 - **Mininet**
 - **POX Controller**
 - **Open vSwitch**
 - **OpenFlow 1.0**
-- **tcpdump / Wireshark**
+- **tcpdump**
 - **Git & GitHub**
 
 ---

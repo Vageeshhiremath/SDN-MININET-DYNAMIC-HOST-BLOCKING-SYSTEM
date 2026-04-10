@@ -12,6 +12,7 @@ Detection of high packet rate traffic
 Dynamic installation of OpenFlow drop rules
 Automatic unblocking after timeout
 Event logging in JSON format
+
 Technologies Used
 Python
 POX Controller

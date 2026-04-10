@@ -12,7 +12,9 @@ behavior, and automatically blocks malicious hosts.
 
 ## Network Topology
 
-![Topology](/mnt/data/topolgy(1).png)
+![Topology]
+<img width="709" height="276" alt="topolgy" src="https://github.com/user-attachments/assets/c720c03c-60f1-44bc-937a-c359613e5034" />
+
 
 ------------------------------------------------------------------------
 
@@ -27,7 +29,9 @@ README.md
 
 Command: ./pox.py log.level --DEBUG openflow.of_01 dynamic_block
 
-![Controller Output](/mnt/data/controller_pox(1).png)
+![Controller Output]
+<img width="594" height="290" alt="controller_pox" src="https://github.com/user-attachments/assets/27ffb274-0eff-48ac-b235-4042dca91e38" />
+
 
 ------------------------------------------------------------------------
 
@@ -36,7 +40,9 @@ Command: ./pox.py log.level --DEBUG openflow.of_01 dynamic_block
 Command: sudo mn --custom topology.py --topo securitytopo --switch
 ovs,protocols=OpenFlow10 --controller remote,ip=127.0.0.1,port=6633
 
-![Mininet Topology](/mnt/data/topolgy(1).png)
+![Mininet Topology]
+<img width="504" height="161" alt="blockmininet" src="https://github.com/user-attachments/assets/9ade14c8-9d05-40da-8476-04c2876ef9d4" />
+
 
 ------------------------------------------------------------------------
 
@@ -44,7 +50,9 @@ ovs,protocols=OpenFlow10 --controller remote,ip=127.0.0.1,port=6633
 
 Command: mininet\> h1 ping -c 3 10.0.0.2
 
-![Before Blocking](/mnt/data/beforeblocking(1).png)
+![Before Blocking]
+<img width="529" height="147" alt="beforeblocking" src="https://github.com/user-attachments/assets/2cd168c9-5fbb-4391-b4ee-edbcbfaad446" />
+
 
 ------------------------------------------------------------------------
 
@@ -52,19 +60,24 @@ Command: mininet\> h1 ping -c 3 10.0.0.2
 
 Command: mininet\> h3 ping -i 0.2 -c 20 10.0.0.2
 
-![Traffic Capture](/mnt/data/tcptraffic(1).png)
+![Traffic Capture]
+<img width="647" height="351" alt="tcptraffic" src="https://github.com/user-attachments/assets/a411d320-fe0e-40ec-bc77-574b10de8c66" />
+
 
 ------------------------------------------------------------------------
 
 ## Detection Logic Execution
 
-![Detection Logs](/mnt/data/blockdetection(1).png)
+![Detection Logs]
+<img width="564" height="195" alt="blockdetection" src="https://github.com/user-attachments/assets/a5b6dbbe-27c6-46a2-8761-376185c2590d" />
+
 
 ------------------------------------------------------------------------
 
 ## After Blocking
 
-![After Blocking](/mnt/data/blockmininet(1).png)
+![After Blocking]
+<img width="504" height="161" alt="blockmininet" src="https://github.com/user-attachments/assets/a7f8ece5-2ecc-46d1-a79a-70d96abf8bc1" />
 
 ------------------------------------------------------------------------
 
@@ -72,7 +85,9 @@ Command: mininet\> h3 ping -i 0.2 -c 20 10.0.0.2
 
 Command: sudo ovs-ofctl -O OpenFlow10 dump-flows s1
 
-![Flow Table](/mnt/data/flowtable(1).png)
+![Flow Table]
+<img width="752" height="175" alt="flowtable" src="https://github.com/user-attachments/assets/a3fa2407-a169-4f17-90bb-c727b9f8f515" />
+
 
 ------------------------------------------------------------------------
 
